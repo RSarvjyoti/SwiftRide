@@ -4,6 +4,8 @@
 
 - `POST /api/users/register` — Register a new user
 - `POST /api/users/login` — Login with email and password
+- `GET /api/users/logout` — Logout the current user
+- `GET /api/users/profile` — Get the authenticated user's profile
 
 ---
 
@@ -187,4 +189,111 @@ Content-Type: application/json
   "email": "alice.smith@example.com",
   "password": "securepassword"
 }
+```
+
+---
+
+## Logout
+
+### Description
+
+Logs out the currently authenticated user by blacklisting their JWT token. Requires the `Authorization` header with a valid Bearer token.
+
+### Request
+
+- **Method:** `GET`
+- **Endpoint:** `/api/users/logout`
+- **Headers:**
+  - `Authorization: Bearer <jwt_token>`
+
+### Responses
+
+#### 200 OK
+
+- **Description:** Logout successful.
+- **Body Example:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### 401 Unauthorized
+
+- **Description:** No token provided, invalid token, or token is blacklisted.
+- **Body Example:**
+  ```json
+  {
+    "message": "Unauthorized - No token provided"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+GET /api/users/logout
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+## Profile
+
+### Description
+
+Returns the authenticated user's profile information. Requires the `Authorization` header with a valid Bearer token.
+
+### Request
+
+- **Method:** `GET`
+- **Endpoint:** `/api/users/profile`
+- **Headers:**
+  - `Authorization: Bearer <jwt_token>`
+
+### Responses
+
+#### 200 OK
+
+- **Description:** Returns the user's profile.
+- **Body Example:**
+  ```json
+  {
+    "_id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "createdAt": "2024-06-25T12:00:00.000Z",
+    "updatedAt": "2024-06-25T12:00:00.000Z"
+  }
+  ```
+
+#### 401 Unauthorized
+
+- **Description:** No token provided, invalid token, or token is blacklisted.
+- **Body Example:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+GET /api/users/profile
+Authorization: Bearer <jwt_token>
 ```

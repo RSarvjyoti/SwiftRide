@@ -1,3 +1,4 @@
+const BlacklistToken = require("../models/blacklistToken.model");
 const userModel = require("../models/user.model");
 const { createUser } = require("../services/user.service");
 const { validationResult } = require("express-validator");
@@ -55,3 +56,23 @@ module.exports.loginUser = async (req, res, next) => {
   res.status(200).json({token, user})
 
 };
+
+module.exports.getUserProfile = async (req, res, next) => {
+    res.status(200).json(req.user);
+}
+
+module.exports.logoutUser = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized - No token provided" });
+    }
+
+    try {
+        await BlacklistToken.create({ token });
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        next(error);
+    }
+}

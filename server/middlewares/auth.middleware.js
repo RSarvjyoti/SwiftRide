@@ -2,6 +2,7 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const BlacklistToken = require("../models/blacklistToken.model");
+const captainModel = require("../models/captain.model");
 
 module.exports.authUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -28,6 +29,32 @@ module.exports.authUser = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+module.exports.authCaptain = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const isBlackListed = await BlacklistToken.findOne({ token });
+    if (isBlackListed) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const captain = await captainModel.findById(decoded._id);
+    if (!captain) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.captain = captain;
     next();
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });

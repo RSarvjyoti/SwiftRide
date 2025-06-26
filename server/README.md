@@ -7,6 +7,9 @@
 - `GET /api/users/logout` — Logout the current user
 - `GET /api/users/profile` — Get the authenticated user's profile
 - `POST /api/captains/register` — Register a new captain
+- `POST /api/captains/login` — Login a captain
+- `GET /api/captains/logout` — Logout the current captain
+- `GET /api/captains/profile` — Get the authenticated captain's profile
 
 ---
 
@@ -425,4 +428,228 @@ Content-Type: application/json
     "vehicleType": "car"
   }
 }
+```
+
+---
+
+## Captain Login
+
+### Endpoint
+
+`POST /api/captains/login`
+
+---
+
+### Description
+
+Authenticates a captain using their email and password. Returns a JWT token and the captain object upon successful login.
+
+---
+
+### Request Body
+
+Send a JSON object in the following format:
+
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### Field Requirements
+
+- `email` (string, required): Must be a valid email address.
+- `password` (string, required): Minimum 6 characters.
+
+---
+
+### Responses
+
+#### 200 OK
+
+- **Description:** Login successful.
+- **Body Example:**
+  ```json
+  {
+    "message": "Login successful",
+    "token": "<jwt_token>",
+    "captain": {
+      "_id": "captain_id",
+      "fullname": {
+        "firstname": "Jane",
+        "lastname": "Doe"
+      },
+      "email": "jane.doe@example.com",
+      "vehicles": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      },
+      "createdAt": "2024-06-25T12:00:00.000Z",
+      "updatedAt": "2024-06-25T12:00:00.000Z"
+    }
+  }
+  ```
+
+#### 400 Bad Request
+
+- **Description:** Validation failed or invalid credentials.
+- **Body Example:**
+  ```json
+  {
+    "error": "Invalid email or password"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+POST /api/captains/login
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com",
+  "password": "securepassword"
+}
+```
+
+---
+
+## Captain Profile
+
+### Endpoint
+
+`GET /api/captains/profile`
+
+---
+
+### Description
+
+Returns the authenticated captain's profile information. Requires the `Authorization` header with a valid Bearer token.
+
+---
+
+### Request
+
+- **Method:** `GET`
+- **Endpoint:** `/api/captains/profile`
+- **Headers:**
+  - `Authorization: Bearer <jwt_token>`
+
+---
+
+### Responses
+
+#### 200 OK
+
+- **Description:** Returns the captain's profile.
+- **Body Example:**
+  ```json
+  {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicles": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "createdAt": "2024-06-25T12:00:00.000Z",
+    "updatedAt": "2024-06-25T12:00:00.000Z"
+  }
+  ```
+
+#### 401 Unauthorized
+
+- **Description:** No token provided, invalid token, or token is blacklisted.
+- **Body Example:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+GET /api/captains/profile
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+## Captain Logout
+
+### Endpoint
+
+`GET /api/captains/logout`
+
+---
+
+### Description
+
+Logs out the currently authenticated captain by blacklisting their JWT token. Requires the `Authorization` header with a valid Bearer token.
+
+---
+
+### Request
+
+- **Method:** `GET`
+- **Endpoint:** `/api/captains/logout`
+- **Headers:**
+  - `Authorization: Bearer <jwt_token>`
+
+---
+
+### Responses
+
+#### 200 OK
+
+- **Description:** Logout successful.
+- **Body Example:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### 401 Unauthorized
+
+- **Description:** No token provided, invalid token, or token is blacklisted.
+- **Body Example:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+GET /api/captains/logout
+Authorization: Bearer <jwt_token>
 ```

@@ -1,4 +1,4 @@
-const BlacklistToken = require("../models/blacklistToken.model");
+const blacklistTokenModel = require("../models/blacklistToken.model");
 const userModel = require("../models/user.model");
 const { createUser } = require("../services/user.service");
 const { validationResult } = require("express-validator");
@@ -84,7 +84,7 @@ module.exports.logoutUser = async (req, res, next) => {
     }
 
     try {
-        await BlacklistToken.create({ token });
+        await blacklistTokenModel.create({ token });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         next(error);

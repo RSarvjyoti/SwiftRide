@@ -6,6 +6,7 @@
 - `POST /api/users/login` — Login with email and password
 - `GET /api/users/logout` — Logout the current user
 - `GET /api/users/profile` — Get the authenticated user's profile
+- `POST /api/captains/register` — Register a new captain
 
 ---
 
@@ -296,4 +297,132 @@ Returns the authenticated user's profile information. Requires the `Authorizatio
 ```http
 GET /api/users/profile
 Authorization: Bearer <jwt_token>
+```
+
+---
+
+## Captain Registration
+
+### Endpoint
+
+`POST /api/captains/register`
+
+---
+
+### Description
+
+Registers a new captain (driver) by accepting their name, email, password, and vehicle details. Returns a JWT token and the created captain object upon successful registration.
+
+---
+
+### Request Body
+
+Send a JSON object in the following format:
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Doe"
+  },
+  "email": "jane.doe@example.com",
+  "password": "yourpassword",
+  "vehicles": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Field Requirements
+
+- `fullname.firstname` (string, required): Minimum 3 characters.
+- `fullname.lastname` (string, optional): Minimum 3 characters if provided.
+- `email` (string, required): Must be a valid email address.
+- `password` (string, required): Minimum 6 characters.
+- `vehicles.color` (string, required): Minimum 3 characters.
+- `vehicles.plate` (string, required): Minimum 3 characters.
+- `vehicles.capacity` (integer, required): Must be at least 1.
+- `vehicles.vehicleType` (string, required): Must be one of `"car"`, `"motorcycle"`, or `"auto"`.
+
+---
+
+### Responses
+
+#### 201 Created
+
+- **Description:** Captain registration successful.
+- **Body Example:**
+  ```json
+  {
+    "token": "<jwt_token>",
+    "captain": {
+      "_id": "captain_id",
+      "fullname": {
+        "firstname": "Jane",
+        "lastname": "Doe"
+      },
+      "email": "jane.doe@example.com",
+      "vehicles": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      },
+      "createdAt": "2024-06-25T12:00:00.000Z",
+      "updatedAt": "2024-06-25T12:00:00.000Z"
+    }
+  }
+  ```
+
+#### 400 Bad Request
+
+- **Description:** Validation failed (e.g., missing or invalid fields, or captain already exists).
+- **Body Example:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "First name must be at least 3 characters long",
+        "param": "fullname.firstname",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+  or
+  ```json
+  {
+    "error": "Captain already exists with this email"
+  }
+  ```
+
+#### 500 Internal Server Error
+
+- **Description:** Unexpected server error.
+
+---
+
+### Example Request
+
+```http
+POST /api/captains/register
+Content-Type: application/json
+
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Doe"
+  },
+  "email": "jane.doe@example.com",
+  "password": "securepassword",
+  "vehicles": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
 ```

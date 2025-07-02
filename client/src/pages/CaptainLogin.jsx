@@ -22,7 +22,7 @@ const CaptainLogin = () => {
       <div>
         <img className="w-[150px] mb-10" src={logo} alt="logo" />
         <form onSubmit={(e)=>handleSubmit(e)}>
-          <h3 className="text-lg font-medium mb-2">What's your email?</h3>
+          <h3 className="text-lg font-medium mb-2">What's your captain email?</h3>
           <input
             required
             type="email"

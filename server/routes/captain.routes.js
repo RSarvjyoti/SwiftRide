@@ -10,10 +10,6 @@ router.post(
     body("fullname.firstname")
       .isLength({ min: 3 })
       .withMessage("First name must be at least 3 characters long"),
-    body("fullname.lastname")
-      .optional()
-      .isLength({ min: 3 })
-      .withMessage("Last name must be at least 3 characters long"),
     body("email").isEmail().withMessage("Please enter a valid email address"),
     body("password")
       .isLength({ min: 6 })

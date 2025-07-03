@@ -18,8 +18,6 @@ const captainSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true,
-    match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
   },
   password: {
     type: String,
@@ -53,7 +51,7 @@ const captainSchema = new mongoose.Schema({
     vehicleType: {
       type: String,
       required: true,
-      enum: ["car", "motarcycle", "auto"],
+      enum: ["car", "motorcycle", "auto"],
     },
   },
   location: {

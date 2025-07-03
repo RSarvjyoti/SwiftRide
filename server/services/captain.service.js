@@ -15,7 +15,6 @@ module.exports.createCaptain = async ({
     throw new Error("All fields are required");
   }
 
-  // Create a new captain instance with the correct nested structure
   const captain = await captainModel.create({
     fullname:{
       firstname,

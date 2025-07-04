@@ -10,6 +10,8 @@ import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import { Toaster } from "react-hot-toast";
 import UserLogout from "./pages/UserLogout";
 import CaptainHome from "./pages/CaptainHome";
+import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
+import CaptainLogout from "./pages/CaptainLogout";
 
 function App() {
   return (
@@ -35,7 +37,17 @@ function App() {
           </UserProtectedWrapper>
         } />
 
-        <Route path="/captain-home" element={<CaptainHome />} />
+        <Route path="/captain-home" element={
+          <CaptainProtectedWrapper>
+            <CaptainHome />
+          </CaptainProtectedWrapper>
+        } />
+
+        <Route path="/captain/logout" element={
+          <CaptainProtectedWrapper>
+            <CaptainLogout />
+          </CaptainProtectedWrapper>
+        } />
       </Routes>
     </div>
   );
